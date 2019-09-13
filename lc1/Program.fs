@@ -55,11 +55,15 @@ let rec mul (p1, p2) =
 
 // ex7c
 let printPoly (p) =
-    printf ""
+    match p with
+    | [] -> sprintfn ""
+    | h::t -> sprintf "%d x^%d" h t.Length + printPoly(t)
 
 [<EntryPoint>]
 let main argv =
-    let m = f(-4)
-    // let m = mul([2; 3; 0; 1], [1; 2; 3; 0])
+    // let m = f(-4)
+    let m = mul([2; 3; 0; 1], [1; 2; 3; 0])
     printfn "%A" m
+
+    printPoly([2;5;4;6;0;5])
     0 // return an integer exit code
