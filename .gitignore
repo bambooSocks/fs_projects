@@ -10,3 +10,5 @@ lc2/bin/Debug/netcoreapp2\.2/
 lc2/obj/Debug/netcoreapp2\.2/
 
 lc2/obj/
+
+.ionide/

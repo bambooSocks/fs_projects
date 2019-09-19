@@ -21,13 +21,12 @@ let rec evenN n =
     | n -> evenN(n-1)@[n*2]
     
 //ex4.8
-let rec split l =
-    match l with
-    | []                        -> ([],[])
-    | f::tail when l.Length = 1 -> let (x,y) = split(tail)
-                                   (f::x, y)
-    | f::s::tail                -> let (x,y) = split(tail)
-                                   (f::x, s::y)
+let rec split = function
+    | []         -> ([],[])
+    | [f]        -> let (x,y) = split([])
+                    (f::x, y)
+    | f::s::tail -> let (x,y) = split(tail)
+                    (f::x, s::y)
 
 //ex4.9
 let rec zip (xs,ys) =
@@ -46,9 +45,54 @@ let rec sum (p,xs) =
     | x::xt when p(x) -> x + sum(p, xt)
     | x::xt           -> sum(p, xt)
 
+//ex4.17
+let rec p q = function
+    | [] -> []
+    | x::xs -> let ys = p q xs
+               if q x then x::ys else ys@[x]
+
+//ex
+
+let invert b =
+    match b with
+    | true  -> false
+    | false -> true
+
+let add a b =
+    a + b
+
+let first a b = 
+    a
+
+let test = function
+| [] -> []
+| x::xs -> xs@[x]
+
+// sort
+let rec merge = function
+    | ([],[])                   -> []
+    | (x::xs,[])                -> x::merge(xs,[])
+    | ([],y::ys)                -> y::merge([],ys)
+    | (x::xs,y::ys) when x <= y -> x::merge(xs,y::ys)
+    | (x::xs,y::ys) when x > y  -> y::merge(x::xs,ys)
+    | _                         -> failwith("wrong input")
+
+let rec sort = function
+| []  -> []
+| [x] -> [x]
+| l   -> let (l1,l2) = split l
+         let s1 = sort l1
+         let s2 = sort l2
+         merge (s1,s2)
+
+let randomList n range = let rand = let gen = System.Random()
+                                    (fun max -> gen.Next(max))
+                         List.init n (fun _ -> rand range);;
 
 [<EntryPoint>]
 let main argv =
-    let m = sum (predicate, [1;-5;10;0;26;-77])
+    // [1;4;9;12;2;3;4;5;10;13]
+    let xs = randomList 3000 1000000
+    let m = sort xs
     printfn "%A" m
     0 // return an integer exit code
